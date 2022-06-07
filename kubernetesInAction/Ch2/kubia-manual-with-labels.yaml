@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuba-manual-v2
+  labels:
+    creation_method: manual
+    env: prod
+spec:
+  containers:
+    - image: warsame99/kubia
+      name: kubia
+      ports:
+        - containerPort: 8087
+          protocol: TCP

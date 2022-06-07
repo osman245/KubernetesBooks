@@ -1,0 +1,48 @@
+In the previous chapter we learnt how to create unmanaged pods, now where learning how to create managed pods.
+
+when a pod is scheduled to run in a node , the kubelet(node agent that runs on each node) in that node will runs its containers and from then on, keep them running as long as the pod exists.
+
+Kubernetes can check if a container is still alive through liveness probes. You can specify
+a liveness probe for each container in the pod’s specification. Kubernetes will periodically execute the probe and restart the container if the probe fail.
+
+You can inspect if a container is operating correctly/or has failed if you send a get request to its ip address..
+past error:
+
+Error from server (BadRequest): error when creating "kubia-liveness-probe.yaml": pod in version "v1" cannot be handled as a Pod: no kind "pod" is registered for version "v1" in scheme "k8s.io/kubernetes/pkg/api/legacyscheme/scheme.go:30"( make pod capitalize...) (bad request...)
+
+try to avoid a liveness probe that uses alot of resources, probes are executed relatively often and are only allowed one second to complete.
+
+kubelet restarts containers when tehy crash and check if their healthy using a liveness probe , which sends get requests to the op address of the containers.
+
+liveness probe---> checks containers are okay
+
+ReplicationControllers--> check if the pods are okay.
+
+ReplicationController:
+A ReplicationController has three essential parts (also shown in figure 4.3):
+ A label selector, which determines what pods are in the ReplicationController’s scope
+ A replica count, which specifies the desired number of pods that should be running
+ A pod template, which is used when creating new pod replicas
+
+Maintain the amount of pod replicas their are..
+
+1.) find pods matching the label selector
+2.) compare mated vs desired pod count
+3.) Too few===> create more replicas from current template
+4.) Too much==> Delete the excess pods...
+
+kubectl get rc
+--->getting the replicationControllers..
+
+If you change a label of a pod, that can ultimately leave or keep a pod in the scope of a replicationController.
+
+kubectl edit rc kubia
+---> to edit the replicationController,opens a yaml definition default text editor
+
+kubectl scale rc kubia --replicas=10
+---> scale the kubia replicationController to 10 pods!
+It modifies the spec.replicas field of rc
+
+A new way of replicating pods is formed, its called replicaSet and its going to overtake replica Controllers(they will be deprecated)
+
+ReplicaSet and replicationControllers are similar but replicaSets are more expressive.It can match label keys not only labels, such as env=production and env=development can be in the same group.

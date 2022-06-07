@@ -1,0 +1,88 @@
+Containers are designed to run only a single process per container (unless the
+process itself spawns child processes). If you run multiple unrelated processes in a
+single container, it is your responsibility to keep all those processes running, manage their logs, and so on
+containers of a pod share the same set of Linux namespaces
+instead of each container having its own set
+
+You want containers inside each group to share certain resources,
+although not all, so that they’re not fully isolated. Kubernetes achieves this by configuring Docker to have all containers of a pod share the same set of Linux namespaces
+instead of each container having its own set.
+
+Kubernetes cluster consists of worker nodes and pods. pods communciate with each other using NAT line.
+
+We think of pods intuitively as machines
+
+Pods are lightweight, so when creating an application we allocate different application components to different pods.
+
+more then one process in a contianer is a no
+more than one container in a pod that are not reliant on each other is a nono.
+
+Parts of a pod...
+Metadata is the info of the pod like name,namespace...
+Spec is the pods content like containers,volumes and etc
+
+Organizing pods and all other Kubernetes objects is done through labels.
+A label is an arbritrary key:value pair you attach to a resource.
+
+We do port forwarding, if we want to just communicate with a pod without going through a service(perhaps for debugging).
+kubectl port-forward kubia-manual 8888:8080
+
+    forward the local machine port 8888 to the port of the pod.which is then utilized when selecting resources using label selectors
+
+(resources are filtered based on whether they include the label specified in the selector).
+
+Labels:  
+ Each pod labelled with 2 labels app and rel.
+
+App specifies which app,componento or mircoservice the pod belongs to.
+rel, is the pod stable,beta or a canary release.
+
+NodeSelector:
+You can select to put this pod in a node that has gpu resource using nodeSelector!!
+
+also each node has
+a unique label with the key kubernetes.io/hostname and value set to the actual hostname of the node
+
+Annotations:
+key-value pairs ,but are not meant to hold identifying information like labels. There not meant to group objects either. Thier meant to hold large amount of information, like introducing features to kubernetes...
+
+Namespace:
+without specifying a namespace for a resource it automatically defaults to the "default" namespace in kubernetes.
+
+namespace is a kubernetes resource, you can create it using a yaml file or even easier using a kubectl command.
+
+COMMANDS:
+
+kubectl get po kubia-manual -o yaml
+----> get pods and print it into to console.
+
+docker logs <container_id>
+---> get docker logs for specific container id
+
+kubectl port-forward kubia-manual 8888:8080
+--> forwarding a host machine port to the pod port
+
+curl localhost:8888
+---> send request to pod through the kubectl port-forward proxy running ..
+
+kubectl get po -L creation_method,env
+---> get pods with labels creation_method and env
+
+kubectl label po kubia-manual creation_method=manual
+---> adding the creation_method=manual label of the kubia-manual pod
+
+kubectl create -f kubia-manual.yaml -n custom-namespace
+
+--->pod "kubia-manual" created
+
+kubectl explain <resource>
+---> gets you can explaination of a resource
+
+kubectl create -f custom-namespace.yaml
+--->namespace "custom-namespace" created
+
+kubectl label po kubia-manual-v2 env=debug --overwrite
+--->changing the env label of the kubia-manual-v2 pod
+
+kubectl delete po -l creation_method=manual
+---> Delete pod with creation_method label...

@@ -1,0 +1,19 @@
+-> Pull and run any publicly available container image
+docker run <image>:<tag>
+-> Package your apps into container images and make them available to anyone
+docker build -t kubia .(looks for dockerFile and builds it with this image name)
+Pushing the images to a remote image registry
+docker login (login to dockerhub)
+docker push
+-> Enter a running container and inspect its environment
+docker run image:tag
+docker inspect kubia-container
+
+->List and inspect Nodes, Pods, Services, and ReplicationControllers in a Kubernetes cluster
+kubectl get [nodes,services,rc] / kubectl get pods -o wide[more info and output it] / kubectl describe pod kubia
+->Run a container in Kubernetes and make it accessible from outside the cluster
+
+->Scale an app horizontally by changing the ReplicationController’s replica count
+kubectl scale rc kubia --replicas=3
+-> Access the web-based Kubernetes dashboard on Minikube
+minikube dashboard
