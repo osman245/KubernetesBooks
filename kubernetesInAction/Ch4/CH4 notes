@@ -46,3 +46,42 @@ It modifies the spec.replicas field of rc
 A new way of replicating pods is formed, its called replicaSet and its going to overtake replica Controllers(they will be deprecated)
 
 ReplicaSet and replicationControllers are similar but replicaSets are more expressive.It can match label keys not only labels, such as env=production and env=development can be in the same group.
+
+DaemonSets:
+Pods created by a DaemonSet already have a target node specified and skip the Kubernetes Scheduler.
+
+DaemonSets are meant to run
+system services, which usually need to run even on unschedulable nodes.
+
+daemonsets are created one per pod. they run system services..
+
+in ds rc and rs they manage pods that run forever. What about pods that have completable task and did to terminate afterwards??
+
+We create pods managed by a "job" for completable tasks and terminate when the task is done..
+these pods are reschedulable.. even if a node fails we reschedule the pod to another node...
+
+cron jobs are used for scheduling jobs in the future
+
+COMMANDS:
+
+kubectl edit rc kubia
+---> to edit the replicationController,opens a yaml definition default text editor
+
+kubectl scale rc kubia --replicas=10
+---> scale the kubia replicationController to 10 pods!
+It modifies the spec.replicas field of rc
+
+kubectl get rs
+---> get all replicasets
+
+kubectl describe rs
+--> extended information on the replica sets
+
+kubectl delete rs kubia
+-->replicaset "kubia" deleted
+
+kubectl get ds
+-->get your daemonset
+
+kubectl get jobs
+-->get jobs

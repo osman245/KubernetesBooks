@@ -1,0 +1,2 @@
+We learned about pods and how to manage and deploy them using replicasets.
+Many applications these days are meant to respond to external requests.
