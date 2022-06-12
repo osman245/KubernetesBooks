@@ -1,2 +1,77 @@
 We learned about pods and how to manage and deploy them using replicasets.
 Many applications these days are meant to respond to external requests.
+
+Since pods are ephemeral, they come and go at anytime, we cant rely on their ip addresses to respond to external requests!
+
+Services are used as a permanent address!
+
+Service used in an example:
+Example: we have several frontend pod and one backend pod.
+By creating a service for the frontend pods and configuring it to be accessible from
+outside the cluster, you expose a single, constant IP address through which external
+clients can connect to the pods. Similarly, by also creating a service for the backend
+pod, you create a stable address for the backend pod
+
+service proxy normally forwards each connection
+to a randomly selected backing pod, even if the connections are coming from the
+same client, to get it to a specific pod all the time, use "spec:
+sessionAffinity: ClientIP"
+
+kubectl get svc
+--> get all services
+
+kubectl exec kubia-5tq82 -- curl -s http://10.104.58.218
+
+--> we are executing the container in the pod kubia-5tq82 with the clusterIP http://10.104.58.218 ,The double dash (--) in the command signals the end of command options for
+kubectl. Everything after the double dash is the command that should be executed
+inside the pod.
+
+kubectl delete po --all
+--> delete all pods
+
+kubectl exec <insert pod name> -- env
+--> get the environment variables for this pod.
+get the cluster IP of the service, and get the port the service is available on
+KUBIA_SERVICE_HOST=10.104.58.218
+KUBIA_PORT=tcp://10.104.58.218:80
+10.104.58.218
+
+kubectl exec -it <pod name> bash
+You’re now inside the container. You can use the curl command to access the kubia
+service in any of the following ways:
+root@kubia-3inly:/# curl http://kubia.default.svc.cluster.local
+You’ve hit kubia-5asi2
+root@kubia-3inly:/# curl http://kubia.default
+You’ve hit kubia-3inly
+Connecting to services living outside the cluster 131
+root@kubia-3inly:/# curl http://kubia
+You’ve hit kubia-8awf3
+
+kubectl get endpoints kubia
+
+initially we had a service within the clusterIP and it would accept tcp connections at port 80, and redirect to the pods
+
+When a client connects to a
+service, the service proxy selects one of those IP and port pairs and redirects the
+incoming connection to the server listening at that location.
+
+Now were taking a look at services outside the clusterIP, external IP's.
+
+We can create a service without a pod selector by manually inputing endpoints.
+
+External service:
+
+Our original default type service is clusterIP, which is an internal service. But You have a few ways to make a service accessible externally:
+
+Service type NodePort:
+For a Nodeport service, each cluster node opens a port on the node itself.Service is aacessible through the node ports.
+
+Service type LoadBalancer:
+
+This makes the service accessible through a dedicated load balancer, provisioned
+from the cloud infrastructure Kubernetes is running on. The load balancer redirects traffic to the node port across all the nodes. Clients connect to the service
+through the load balancer’s IP.
+
+Service type Ingress resource:
+Creating an Ingress resource, a radically different mechanism for exposing multiple services through a single IP address—It operates at the HTTP level (network layer 7)
+and can thus offer more features than layer 4 services can

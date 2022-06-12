@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia
+spec:
+  selector:
+    app: kubia
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8088
+## You’re defining a service called kubia, which will accept connections on port 80 and
+##route each connection to port 8088 of one of the pods matching the app=kubia
+

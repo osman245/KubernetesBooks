@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-service
+spec:
+  type: ExternalName
+  externalName: someapi.somecompany.com
+  ports:
+    - port: 80
+## To create a service that serves as an alias for an external service, you create a Service
+## resource with the type field set to ExternalName. For example, let’s imagine there’s a
+## public API available at api.somecompany.com. You can define a service that points to
+## it as shown in the following listing.
